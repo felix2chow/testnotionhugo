@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: //hacktech.cn/sitemap.xml
