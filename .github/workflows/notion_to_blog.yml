@@ -11,69 +11,32 @@ jobs:
     # 注意: 只有当workflows在主分支时，使用 issues 作为触发条件才会生效，所以我个人是将 hugo 作为主分支，将 master 作为 Github Pages 分支
     runs-on: ubuntu-latest
 
-    # steps:
-    # - uses: actions/checkout@v2
-    #   with:
-    #     # Workflows are only triggered when commits (and tags I think, but it would need to be tested) are created pushed using a Personal Access Token (PAT).
-    #     # ref: https://github.com/EndBug/add-and-commit/issues/311#issuecomment-948749635
-    #     token: ${{ secrets.CHECKOUT_TOKEN }}
-
-    # - name: Markdown From Notion
-    #   uses: felix2chow/notion_to_github_blog@master
-    #   with:
-    #     notion_token: secret_FQgVZGyw2Tje4Z6TPzVOxBrLWV7CnqrYErodNWvqbkl
-    #     notion_database_id: 0680eb1e-db6c-4f5a-9086-a91f3ab072c5
-    #     img_store_type: github 
-    #     img_store_path_prefix: notionimg 
-    #     # img_store_url_path_prefix: ${{ secrets.IMG_STORE_URL_PATH_PREFIX }}
-    #     # Actions run as an user, but when they are running in a fork there are potential security problems, so they are degraded to "read-only"
-    #     # ref: https://github.com/actions/first-interaction/issues/10#issuecomment-546628432
-    #     # ref: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
-    #     # so you should set another token
-    #     img_store_github_token: ${{ secrets.CHECKOUT_TOKEN }}
-    #     img_store_github_repo: felix2chow/pic
-    #     img_store_github_branch: master
-    #     # md_store_path_prefix: ${{ secrets.MD_STORE_PATH_PREFIX }}
-
-    # - name: push to github
-    #   uses: EndBug/add-and-commit@v7
-    #   with:
-    #     branch: hugo
-    #     message: 'Notion CI'
-
-
-  steps:
+    steps:
     - uses: actions/checkout@v2
       with:
         # Workflows are only triggered when commits (and tags I think, but it would need to be tested) are created pushed using a Personal Access Token (PAT).
         # ref: https://github.com/EndBug/add-and-commit/issues/311#issuecomment-948749635
         token: ${{ secrets.CHECKOUT_TOKEN }}
 
-      - uses: mohuishou/notion-blog-actions/notion@main
-        with:
-          token: secret_FQgVZGyw2Tje4Z6TPzVOxBrLWV7CnqrYErodNWvqbkl
-          # token_v2: ${{ secrets.NOTION_TOKEN_V2 }}
-          # space_id: "输入你的空间 id"
-          database_id: "0680eb1edb6c4f5a9086a91f3ab072c5"
-          output: "./tmp/"
+    - name: Markdown From Notion
+      uses: felix2chow/notion_to_github_blog@master
+      with:
+        notion_token: secret_FQgVZGyw2Tje4Z6TPzVOxBrLWV7CnqrYErodNWvqbkl
+        notion_database_id: 0680eb1edb6c4f5a9086a91f3ab072c5
+        img_store_type: github 
+        img_store_path_prefix: notionimg 
+        # img_store_url_path_prefix: ${{ secrets.IMG_STORE_URL_PATH_PREFIX }}
+        # Actions run as an user, but when they are running in a fork there are potential security problems, so they are degraded to "read-only"
+        # ref: https://github.com/actions/first-interaction/issues/10#issuecomment-546628432
+        # ref: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
+        # so you should set another token
+        img_store_github_token: ${{ secrets.CHECKOUT_TOKEN }}
+        img_store_github_repo: felix2chow/pic
+        img_store_github_branch: master
+        # md_store_path_prefix: ${{ secrets.MD_STORE_PATH_PREFIX }}
 
-      - name: "migrate image"
-        uses: mohuishou/notion-blog-actions/migrate@main
-        with:
-          input: "./tmp/*.md"
-
-      - name: "cp md files"
-        run: |
-          cp -f tmp/*.md source/_posts/notion/
-          rm -rf tmp
-
-      - name: git setting
-        run: |
-          git config --global user.email "你的邮箱"
-          git config --global user.name "你的用户名"
-
-      - name: update blog
-        run: |
-          git add source
-          git commit -m "feat: auto update by notion sync"
-          git push
+    - name: push to github
+      uses: EndBug/add-and-commit@v7
+      with:
+        branch: hugo
+        message: 'Notion CI'
