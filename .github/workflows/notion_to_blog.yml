@@ -21,8 +21,8 @@ jobs:
     - name: Markdown From Notion
       uses: felix2chow/notion_to_github_blog@master
       with:
-        notion_token: secret_HA3JNVHKWhrxb657OuZMynoDp2OEFlf5n5b7Ugb1sm5
-        notion_database_id: 8b1e796e-16ea-4199-b747-29d41610d239
+        notion_token: secret_FQgVZGyw2Tje4Z6TPzVOxBrLWV7CnqrYErodNWvqbkl
+        notion_database_id: b076d0325e3348ba8c7ea79e5b76de06
         img_store_type: github 
         img_store_path_prefix: notionimg 
         # img_store_url_path_prefix: ${{ secrets.IMG_STORE_URL_PATH_PREFIX }}
