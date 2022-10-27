@@ -1,0 +1,42 @@
+name: Notion To Blog
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  notion-to-blog:
+    if: ${{ github.event.issue.user.login == github.actor && contains(github.event.issue.title, 'notion-ci') }}
+    # 主要作用是：当提交issue的人是你自己，并且issue标题包含 notion-ci 时进行action流程
+    # 注意: 只有当workflows在主分支时，使用 issues 作为触发条件才会生效，所以我个人是将 hugo 作为主分支，将 master 作为 Github Pages 分支
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Workflows are only triggered when commits (and tags I think, but it would need to be tested) are created pushed using a Personal Access Token (PAT).
+        # ref: https://github.com/EndBug/add-and-commit/issues/311#issuecomment-948749635
+        token: ${{ secrets.CHECKOUT_TOKEN }}
+
+    - name: Markdown From Notion
+      uses: felix2chow/notion_to_github_blog@master
+      with:
+        notion_token: secret_FQgVZGyw2Tje4Z6TPzVOxBrLWV7CnqrYErodNWvqbkl
+        notion_database_id: b076d032-5e33-48ba-8c7e-a79e5b76de06
+        img_store_type: github 
+        img_store_path_prefix: notionimg 
+        # img_store_url_path_prefix: ${{ secrets.IMG_STORE_URL_PATH_PREFIX }}
+        # Actions run as an user, but when they are running in a fork there are potential security problems, so they are degraded to "read-only"
+        # ref: https://github.com/actions/first-interaction/issues/10#issuecomment-546628432
+        # ref: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
+        # so you should set another token
+        img_store_github_token: ${{ secrets.CHECKOUT_TOKEN }}
+        img_store_github_repo: felix2chow/pic
+        img_store_github_branch: master
+        # md_store_path_prefix: ${{ secrets.MD_STORE_PATH_PREFIX }}
+
+    - name: push to github
+      uses: EndBug/add-and-commit@v7
+      with:
+        branch: hugo
+        message: 'Notion CI'
