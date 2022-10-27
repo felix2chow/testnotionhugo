@@ -22,7 +22,7 @@ jobs:
       uses: felix2chow/notion_to_github_blog@master
       with:
         notion_token: secret_FQgVZGyw2Tje4Z6TPzVOxBrLWV7CnqrYErodNWvqbkl
-        notion_database_id: b076d032-5e33-48ba-8c7e-a79e5b76de06
+        notion_database_id: b076d0325e3348ba8c7ea79e5b76de06
         img_store_type: github 
         img_store_path_prefix: notionimg 
         # img_store_url_path_prefix: ${{ secrets.IMG_STORE_URL_PATH_PREFIX }}
