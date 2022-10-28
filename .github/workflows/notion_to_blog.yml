@@ -21,7 +21,7 @@ jobs:
     - name: Markdown From Notion
       uses: felix2chow/notion2md_to_hugo@main
       with:
-        notion_token: 5d7b583c04f70f119cf616b0858f4153d371c9a0cdb80a59e9cab55f3e986baa77e7dd55cfaaecce27c071337ac78970826851108eed0806dedd36730fbeb296b30cdacbf49b750e1eea5c08358a
+        notion_token: "secret_FQgVZGyw2Tje4Z6TPzVOxBrLWV7CnqrYErodNWvqbkl"
         notion_database_id: 0680eb1e-db6c-4f5a-9086-a91f3ab072c5
         img_store_type: github 
         img_store_path_prefix: notionimg 
