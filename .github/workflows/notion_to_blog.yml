@@ -12,33 +12,54 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        # Workflows are only triggered when commits (and tags I think, but it would need to be tested) are created pushed using a Personal Access Token (PAT).
-        # ref: https://github.com/EndBug/add-and-commit/issues/311#issuecomment-948749635
-        token: ${{ secrets.CHECKOUT_TOKEN }}
+    # - uses: actions/checkout@v2
+    #   with:
+    #     # Workflows are only triggered when commits (and tags I think, but it would need to be tested) are created pushed using a Personal Access Token (PAT).
+    #     # ref: https://github.com/EndBug/add-and-commit/issues/311#issuecomment-948749635
+    #     token: ${{ secrets.CHECKOUT_TOKEN }}
 
-    - name: Markdown From Notion
-      uses: felix2chow/notion2md_to_hugo@main
-      with:
-        notion_token: ${{ secrets.NOTION_AUTH_TOKEN }}
-        notion_database_id: ${{ secrets.NOTION_DATABASE_ID }}
-        img_store_type: github 
-        img_store_path_prefix: notionimg 
-        # img_store_url_path_prefix: ${{ secrets.IMG_STORE_URL_PATH_PREFIX }}
-        # Actions run as an user, but when they are running in a fork there are potential security problems, so they are degraded to "read-only"
-        # ref: https://github.com/actions/first-interaction/issues/10#issuecomment-546628432
-        # ref: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
-        # so you should set another token
-        img_store_github_token: ${{ secrets.CHECKOUT_TOKEN }}
-        img_store_github_repo: felix2chow/pic
-        img_store_github_branch: master
-        # md_store_path_prefix: ${{ secrets.MD_STORE_PATH_PREFIX }}
+    # - name: Markdown From Notion
+    #   uses: felix2chow/notion2md_to_hugo@main
+    #   with:
+    #     notion_token: ${{ secrets.NOTION_AUTH_TOKEN }}
+    #     notion_database_id: ${{ secrets.NOTION_DATABASE_ID }}
+    #     img_store_type: github 
+    #     img_store_path_prefix: notionimg 
+    #     # img_store_url_path_prefix: ${{ secrets.IMG_STORE_URL_PATH_PREFIX }}
+    #     # Actions run as an user, but when they are running in a fork there are potential security problems, so they are degraded to "read-only"
+    #     # ref: https://github.com/actions/first-interaction/issues/10#issuecomment-546628432
+    #     # ref: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
+    #     # so you should set another token
+    #     img_store_github_token: ${{ secrets.CHECKOUT_TOKEN }}
+    #     img_store_github_repo: felix2chow/pic
+    #     img_store_github_branch: master
+    #     # md_store_path_prefix: ${{ secrets.MD_STORE_PATH_PREFIX }}
 
-    - name: push to github
-      uses: EndBug/add-and-commit@v7
-      with:
-        branch: hugo
-        message: 'Notion CI'
+    # - name: push to github
+    #   uses: EndBug/add-and-commit@v7
+    #   with:
+    #     branch: hugo
+    #     message: 'Notion CI'
 
- 
+ - uses: actions/checkout@v3
+
+      - name: notion-jam
+        uses: victornpb/notion-jam@v0.0.10
+        with:
+          NOTION_SECRET: ${{ secrets.NOTION_AUTH_TOKEN }}
+          NOTION_DATABASE: https://www.notion.so/0680eb1edb6c4f5a9086a91f3ab072c5
+          FILTER_PROP: Status
+          FILTER_VALUES: Published
+          CONVERT_PROP_CASE: snake
+          ARTICLE_PATH: content/posts/{title}/README.md
+          ASSETS_PATH: ./
+          PARALLEL_PAGES: 25
+          PARALLEL_DOWNLOADS_PER_PAGE: 3
+          DOWNLOAD_IMAGE_TIMEOUT: 30
+          SKIP_DOWNLOADED_IMAGES: true
+          DOWNLOAD_FRONTMATTER_IMAGES: true
+      
+      - name: Save changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Commit changes
