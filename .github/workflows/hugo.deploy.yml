@@ -24,7 +24,8 @@ jobs:
         hugo-version: 'latest'
 
     - name: Build
-      run: hugo --minify
+      # --cleanDestinationDir 清除舊檔案
+      run: hugo --minify --gc --cleanDestinationDir
     
     - name: Set GITHUB_FILE_CDN
       run: |
