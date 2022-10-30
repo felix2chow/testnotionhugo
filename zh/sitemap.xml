@@ -735,8 +735,6 @@
   </url><url>
     <loc>//hacktech.cn/links/</loc>
   </url><url>
-    <loc>//hacktech.cn/tags/notion/</loc>
-  </url><url>
     <loc>//hacktech.cn/series/</loc>
     <xhtml:link
                 rel="alternate"
@@ -748,10 +746,6 @@
                 hreflang="zh"
                 href="//hacktech.cn/series/"
                 />
-  </url><url>
-    <loc>//hacktech.cn/categories/%E5%8D%9A%E5%AE%A2%E6%8A%98%E8%85%BE%E6%89%8B%E5%86%8C/</loc>
-  </url><url>
-    <loc>//hacktech.cn/1/01/01/%E4%BD%BF%E7%94%A8-notion-database-%E7%AE%A1%E7%90%86%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/</loc>
   </url><url>
     <loc>//hacktech.cn/search/</loc>
     <xhtml:link
