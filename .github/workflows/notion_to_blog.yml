@@ -20,10 +20,10 @@ jobs:
         notion_secret: ${{ secrets.NOTION_AUTH_TOKEN }}
         database_id: ${{ secrets.NOTION_DATABASE_ID }}
         output: "./source/_posts/notion/"
-        access_key_id: "${{ secrets.ALI_ID }}"
-        access_key_secret: "${{ secrets.ALI_SECRET }}"
-        bucket: "xxx"
-        area: "${{ inputs.oss_endpoint }}"
+        # access_key_id: "${{ secrets.ALI_ID }}"
+        # access_key_secret: "${{ secrets.ALI_SECRET }}"
+        # bucket: "xxx"
+        # area: "${{ inputs.oss_endpoint }}"
         prefix: "image/"
 
     - name: git setting
