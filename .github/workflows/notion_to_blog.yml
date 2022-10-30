@@ -15,21 +15,21 @@ jobs:
       with:
         submodules: false
 
-    - uses: felix2chow/notion-blog-actions@main
+    - uses: mohuishou/notion-blog-actions@main
       with:
         notion_secret: ${{ secrets.NOTION_AUTH_TOKEN }}
         database_id: ${{ secrets.NOTION_DATABASE_ID }}
         output: "./source/_posts/notion/"
-        # access_key_id: "${{ secrets.ALI_ID }}"
-        # access_key_secret: "${{ secrets.ALI_SECRET }}"
-        # bucket: "xxx"
-        # area: "${{ inputs.oss_endpoint }}"
+        access_key_id: "${{ secrets.ALI_ID }}"
+        access_key_secret: "${{ secrets.ALI_SECRET }}"
+        bucket: "xxx"
+        area: "${{ inputs.oss_endpoint }}"
         prefix: "image/"
 
     - name: git setting
       run: |
         git config --global user.email "1@lailin.xyz"
-        git config --global user.name "felix2chow"
+        git config --global user.name "mohuishou"
 
     - name: update blog
       run: |
