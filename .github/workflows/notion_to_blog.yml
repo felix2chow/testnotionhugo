@@ -16,12 +16,10 @@ jobs:
     - uses: mohuishou/notion-blog-actions@main
       with:
         token: ${{ secrets.NOTION_AUTH_TOKEN }}
-        # token_v2: ${{ secrets.NOTION_TOKEN_V2 }}
-        # space_id: ${{ secrets.NOTION_DATABASE_ID }}
         database_id: ${{ secrets.NOTION_DATABASE_ID }}
-        status_name: "status"
-        status_published: "已发布"
-        status_unpublish: "待发布"
+        # status_name: "status"
+        # status_published: "已发布"
+        # status_unpublish: "待发布"
         migrate_image: false
         output: "./source/_posts/notion/"
         access_key_id: false
