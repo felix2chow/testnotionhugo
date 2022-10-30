@@ -17,7 +17,6 @@ jobs:
       with:
         # token: ${{ secrets.CHECKOUT_TOKEN }}
         token: ${{ secrets.NOTION_AUTH_TOKEN }}
-        token_v2: ${{ secrets.NOTION_TOKEN_V2 }}
         database_id: ${{ secrets.NOTION_DATABASE_ID }}
         # status_name: "status"
         # status_published: "已发布"
