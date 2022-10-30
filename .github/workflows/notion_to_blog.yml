@@ -40,13 +40,13 @@ jobs:
     #   run: |
     #     cp -f ./tmp/*.md ./content/posts/
     #     rm -rf ./tmp
-    - name: git setting
-      run: |
-        git config --global user.email "1@lailin.xyz"
-        git config --global user.name "mohuishou"
+      - name: git setting
+        run: |
+          git config --global user.email "1@lailin.xyz"
+          git config --global user.name "mohuishou"
 
-    - name: update blog
-      run: |
-        git add source
-        git commit -m "feat: auto update by notion sync"
-        git push
+      - name: update blog
+        run: |
+          git add source
+          git commit -m "feat: auto update by notion sync"
+          git push
