@@ -9,30 +9,35 @@ jobs:
     if: ${{ github.event.issue.user.login == github.actor && contains(github.event.issue.title, 'notion-ci') }}
     # 主要作用是：当提交issue的人是你自己，并且issue标题包含 notion-ci 时进行action流程
     # 注意: 只有当workflows在主分支时，使用 issues 作为触发条件才会生效，所以我个人是将 hugo 作为主分支，将 master 作为 Github Pages 分支
-    runs-on: ubuntu-latest
+   runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
       with:
         submodules: false
 
-    - uses: mohuishou/notion-blog-actions@main
+    - uses: peiel/notion-blog-actions/notion@main
       with:
-        notion_secret: ${{ secrets.NOTION_AUTH_TOKEN }}
+        token: ${{ secrets.NOTION_AUTH_TOKEN }}
+        token_v2: ${{ secrets.NOTION_TOKEN_V2 }}
+        space_id: ${{ secrets.NOTION_DATABASE_ID }}
         database_id: ${{ secrets.NOTION_DATABASE_ID }}
-        output: "./source/_posts/notion/"
-        access_key_id: "${{ secrets.ALI_ID }}"
-        access_key_secret: "${{ secrets.ALI_SECRET }}"
-        bucket: "xxx"
-        area: "${{ inputs.oss_endpoint }}"
-        prefix: "image/"
+        output: "./tmp/"
 
+    # - name: "migrate image"
+    #   uses: peiel/notion-blog-actions/migrate@main
+    #   with:
+    #     input: "./tmp/*.md"
+
+    - name: "cp md files"
+      run: |
+        cp -f ./tmp/*.md ./content/posts/
+        rm -rf ./tmp
     - name: git setting
       run: |
-        git config --global user.email "1@lailin.xyz"
-        git config --global user.name "mohuishou"
-
+        git config --global user.email "peiel@gmail.com"
+        git config --global user.name "peiel"
     - name: update blog
       run: |
-        git add source
+        git add .
         git commit -m "feat: auto update by notion sync"
         git push
