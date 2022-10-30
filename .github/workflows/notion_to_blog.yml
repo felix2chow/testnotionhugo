@@ -7,37 +7,34 @@ on:
 jobs:
   notion-to-blog:
     if: ${{ github.event.issue.user.login == github.actor && contains(github.event.issue.title, 'notion-ci') }}
-    # 主要作用是：当提交issue的人是你自己，并且issue标题包含 notion-ci 时进行action流程
-    # 注意: 只有当workflows在主分支时，使用 issues 作为触发条件才会生效，所以我个人是将 hugo 作为主分支，将 master 作为 Github Pages 分支
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
       with:
-        submodules: false
+        # Workflows are only triggered when commits (and tags I think, but it would need to be tested) are created pushed using a Personal Access Token (PAT).
+        # ref: https://github.com/EndBug/add-and-commit/issues/311#issuecomment-948749635
+        token: ${{ secrets.CHECKOUT_TOKEN }}
 
-    - uses: peiel/notion-blog-actions/notion@main
+    - name: Markdown From Notion
+      uses: akkuman/notion_to_github_blog@master
       with:
-        token: ${{ secrets.NOTION_AUTH_TOKEN }}
-        token_v2: ${{ secrets.NOTION_TOKEN_V2 }}
-        space_id: ${{ secrets.NOTION_DATABASE_ID }}
-        database_id: ${{ secrets.NOTION_DATABASE_ID }}
-        output: "./tmp/"
+        notion_token: ${{ secrets.NOTION_AUTH_TOKEN }}
+        notion_database_id: ${{ secrets.NOTION_DATABASE_ID }}
+        img_store_type: github
+        img_store_path_prefix: notionimg
+        # img_store_url_path_prefix: ${{ secrets.IMG_STORE_URL_PATH_PREFIX }}
+        # Actions run as an user, but when they are running in a fork there are potential security problems, so they are degraded to "read-only"
+        # ref: https://github.com/actions/first-interaction/issues/10#issuecomment-546628432
+        # ref: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
+        # so you should set another token
+        img_store_github_token: ${{ secrets.CHECKOUT_TOKEN }}
+        img_store_github_repo: felix2chow/pic
+        img_store_github_branch: master
+        # md_store_path_prefix: ${{ secrets.MD_STORE_PATH_PREFIX }}
 
-    # - name: "migrate image"
-    #   uses: peiel/notion-blog-actions/migrate@main
-    #   with:
-    #     input: "./tmp/*.md"
-
-    - name: "cp md files"
-      run: |
-        cp -f ./tmp/*.md ./content/posts/
-        rm -rf ./tmp
-    - name: git setting
-      run: |
-        git config --global user.email "peiel@gmail.com"
-        git config --global user.name "peiel"
-    - name: update blog
-      run: |
-        git add .
-        git commit -m "feat: auto update by notion sync"
-        git push
+    - name: push to github
+      uses: EndBug/add-and-commit@v7
+      with:
+        branch: hugo
+        message: 'Notion CI'
