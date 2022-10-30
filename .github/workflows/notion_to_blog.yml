@@ -10,29 +10,29 @@ jobs:
     # 主要作用是：当提交issue的人是你自己，并且issue标题包含 notion-ci 时进行action流程
     # 注意: 只有当workflows在主分支时，使用 issues 作为触发条件才会生效，所以我个人是将 hugo 作为主分支，将 master 作为 Github Pages 分支
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@master
+      with:
+        submodules: false
 
-      - name: notion-jam
-        uses: victornpb/notion-jam@v0.0.10
-        with:
-          NOTION_SECRET: ${{ secrets.NOTION_AUTH_TOKEN }}
-          NOTION_DATABASE: ${{ secrets.NOTION_DATABASE_ID }}
-          FILTER_PROP: Status
-          FILTER_VALUES: Published
-          CONVERT_PROP_CASE: snake
-          ARTICLE_PATH: content/posts/{title}/README.md
-          ASSETS_PATH: ./
-          PARALLEL_PAGES: 25
-          PARALLEL_DOWNLOADS_PER_PAGE: 3
-          DOWNLOAD_IMAGE_TIMEOUT: 30
-          SKIP_DOWNLOADED_IMAGES: true
-          DOWNLOAD_FRONTMATTER_IMAGES: true
-      
-      - name: Save changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Commit changes
+    - uses: felix2chow/notion-blog-actions@main
+      with:
+        notion_secret: ${{ secrets.NOTION_AUTH_TOKEN }}
+        database_id: ${{ secrets.NOTION_DATABASE_ID }}
+        output: "./source/_posts/notion/"
+        access_key_id: "${{ secrets.ALI_ID }}"
+        access_key_secret: "${{ secrets.ALI_SECRET }}"
+        bucket: "xxx"
+        area: "${{ inputs.oss_endpoint }}"
+        prefix: "image/"
+
+    - name: git setting
+      run: |
+        git config --global user.email "1@lailin.xyz"
+        git config --global user.name "felix2chow"
+
+    - name: update blog
+      run: |
+        git add source
+        git commit -m "feat: auto update by notion sync"
+        git push
