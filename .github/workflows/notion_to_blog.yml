@@ -15,8 +15,8 @@ jobs:
 
     - uses: mohuishou/notion-blog-actions@main
       with:
-        token: ${{ secrets.CHECKOUT_TOKEN }}
-        notion_secret: ${{ secrets.NOTION_AUTH_TOKEN }}
+        # token: ${{ secrets.CHECKOUT_TOKEN }}
+        token: ${{ secrets.NOTION_AUTH_TOKEN }}
         database_id: ${{ secrets.NOTION_DATABASE_ID }}
         # status_name: "status"
         # status_published: "已发布"
