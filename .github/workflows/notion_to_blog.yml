@@ -13,7 +13,7 @@ jobs:
       with:
         submodules: false
 
-    - uses: peiel/notion-blog-actions/notion@main
+    - uses: mohuishou/notion-blog-actions/notion@main
       with:
         token: ${{ secrets.NOTION_AUTH_TOKEN }}
         token_v2: ${{ secrets.NOTION_TOKEN_V2 }}
