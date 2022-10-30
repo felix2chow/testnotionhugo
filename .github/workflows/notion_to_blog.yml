@@ -16,26 +16,37 @@ jobs:
     - uses: mohuishou/notion-blog-actions@main
       with:
         token: ${{ secrets.NOTION_AUTH_TOKEN }}
-        token_v2: ${{ secrets.NOTION_TOKEN_V2 }}
-        space_id: ${{ secrets.NOTION_DATABASE_ID }}
+        # token_v2: ${{ secrets.NOTION_TOKEN_V2 }}
+        # space_id: ${{ secrets.NOTION_DATABASE_ID }}
         database_id: ${{ secrets.NOTION_DATABASE_ID }}
-        output: "./tmp/"
+        status_name: "status"
+        status_published: "已发布"
+        status_unpublish: "待发布"
+        migrate_image: false
+        output: "./source/_posts/notion/"
+        access_key_id: false
+        access_key_secret: false
+        bucket: false
+        area: false
+        prefix: false
+
+
 
     # - name: "migrate image"
     #   uses: peiel/notion-blog-actions/migrate@main
     #   with:
     #     input: "./tmp/*.md"
 
-    - name: "cp md files"
-      run: |
-        cp -f ./tmp/*.md ./content/posts/
-        rm -rf ./tmp
-    - name: git setting
-      run: |
-        git config --global user.email "peiel@gmail.com"
-        git config --global user.name "peiel"
-    - name: update blog
-      run: |
-        git add .
-        git commit -m "feat: auto update by notion sync"
-        git push
+    # - name: "cp md files"
+    #   run: |
+    #     cp -f ./tmp/*.md ./content/posts/
+    #     rm -rf ./tmp
+    # - name: git setting
+    #   run: |
+    #     git config --global user.email "peiel@gmail.com"
+    #     git config --global user.name "peiel"
+    # - name: update blog
+    #   run: |
+    #     git add .
+    #     git commit -m "feat: auto update by notion sync"
+    #     git push
