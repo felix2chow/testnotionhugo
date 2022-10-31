@@ -67,7 +67,7 @@ jobs:
       uses: jacky10001/notion2md_to_hugo@main
       with:
         notion_token: ${{ secrets.NOTION_AUTH_TOKEN }}
-        notion_database_id: 0680eb1e-db6c-4f5a-9086-a91f3ab072c5
+        notion_database_id: ${{ secrets.NOTION_DATABASE_ID }}
         img_store_type: github
         img_store_path_prefix: notionimg
         # img_store_url_path_prefix: ${{ secrets.IMG_STORE_URL_PATH_PREFIX }}
