@@ -4,49 +4,84 @@ on:
   issues:
     types: [opened]
 
+# jobs:
+#   notion-to-blog:
+#     if: ${{ github.event.issue.user.login == github.actor && contains(github.event.issue.title, 'notion-ci') }}
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@master
+#       with:
+#         submodules: false
+
+#     - uses: mohuishou/notion-blog-actions@main
+#       with:
+#         # token: ${{ secrets.CHECKOUT_TOKEN }}
+#         token: ${{ secrets.NOTION_AUTH_TOKEN }}
+#         database_id: ${{ secrets.NOTION_DATABASE_ID }}
+#         # status_name: "status"
+#         # status_published: "已发布"
+#         # status_unpublish: "待发布"
+#         migrate_image: false
+#         output: "./source/_posts/notion/"
+#         access_key_id: false
+#         access_key_secret: false
+#         bucket: false
+#         area: false
+#         prefix: false
+#     - name: git setting
+#       run: |
+#         git config --global user.email "1@lailin.xyz"
+#         git config --global user.name "mohuishou"
+
+#     - name: update blog
+#       run: |
+#         git add source
+#         git commit -m "feat: auto update by notion sync"
+#         git push
+
+
+#     # - name: "migrate image"
+#     #   uses: peiel/notion-blog-actions/migrate@main
+#     #   with:
+#     #     input: "./tmp/*.md"
+
+#     # - name: "cp md files"
+#     #   run: |
+#     #     cp -f ./tmp/*.md ./content/posts/
+#     #     rm -rf ./tmp
+     
+
 jobs:
   notion-to-blog:
     if: ${{ github.event.issue.user.login == github.actor && contains(github.event.issue.title, 'notion-ci') }}
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
       with:
-        submodules: false
+        # Workflows are only triggered when commits (and tags I think, but it would need to be tested) are created pushed using a Personal Access Token (PAT).
+        # ref: https://github.com/EndBug/add-and-commit/issues/311#issuecomment-948749635
+        token: ${{ secrets.CHECKOUT_TOKEN }}
 
-    - uses: mohuishou/notion-blog-actions@main
+    - name: Markdown From Notion
+      uses: felix2chow/notion2md_to_hugo@main
       with:
-        # token: ${{ secrets.CHECKOUT_TOKEN }}
-        token: ${{ secrets.NOTION_AUTH_TOKEN }}
-        database_id: ${{ secrets.NOTION_DATABASE_ID }}
-        # status_name: "status"
-        # status_published: "已发布"
-        # status_unpublish: "待发布"
-        migrate_image: false
-        output: "./source/_posts/notion/"
-        access_key_id: false
-        access_key_secret: false
-        bucket: false
-        area: false
-        prefix: false
-    - name: git setting
-      run: |
-        git config --global user.email "1@lailin.xyz"
-        git config --global user.name "mohuishou"
+        notion_token: ${{ secrets.NOTION_AUTH_TOKEN }}
+        notion_database_id: ${{ secrets.NOTION_DATABASE_ID }}
+        img_store_type: github
+        img_store_path_prefix: notionimg
+        # img_store_url_path_prefix: ${{ secrets.IMG_STORE_URL_PATH_PREFIX }}
+        # Actions run as an user, but when they are running in a fork there are potential security problems, so they are degraded to "read-only"
+        # ref: https://github.com/actions/first-interaction/issues/10#issuecomment-546628432
+        # ref: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
+        # so you should set another token
+        img_store_github_token: ${{ secrets.CHECKOUT_TOKEN }}
+        img_store_github_repo: felix2chow/pic
+        img_store_github_branch: master
+        # md_store_path_prefix: ${{ secrets.MD_STORE_PATH_PREFIX }}
 
-    - name: update blog
-      run: |
-        git add source
-        git commit -m "feat: auto update by notion sync"
-        git push
-
-
-    # - name: "migrate image"
-    #   uses: peiel/notion-blog-actions/migrate@main
-    #   with:
-    #     input: "./tmp/*.md"
-
-    # - name: "cp md files"
-    #   run: |
-    #     cp -f ./tmp/*.md ./content/posts/
-    #     rm -rf ./tmp
-     
+    - name: push to github
+      uses: EndBug/add-and-commit@v7
+      with:
+        branch: hugo
+        message: 'Notion CI'
